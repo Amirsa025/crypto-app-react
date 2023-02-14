@@ -17,6 +17,7 @@
 }
 .heading table {
     width:100%;
+    margin: 10px;
 }
 .coin-name {
     margin-left: -4rem;

@@ -9,13 +9,14 @@ const Coins = ({coins}) => {
         const date = new Date(numberTime * 1000);
         return date.toTimeString();
     };
-    if (!coins || !coins.length || !coins[0]) return 'Loading...';
+
     return (
         <div className='container'>
             <div>
                 <div className='heading'>
                     <table>
                         <tr>
+
                             <th>STT</th>
                             <th>Symbol</th>
                             <th>Interval</th>
@@ -30,6 +31,7 @@ const Coins = ({coins}) => {
 
                             coins.map((trade, index) => (
                                 <tr key={index} className="trade">
+
                                     <td>{index + 1}</td>
                                     <td>{trade && trade.s}</td>
                                     <td>{trade && trade.i}</td>
