@@ -1,34 +1,56 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import { Routes, Route } from 'react-router-dom'
 import Coins from './components/Coins'
-import Coin from './routes/Coin'
 import Navbar from './components/Navbar'
-
-
 function App() {
 
-  const [coins, setCoins] = useState([])
+  const [ws, setWs] = useState(null);
+  const [trades, setTrades] = useState([]);
 
-  const url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false'
+  const URL_WEB_SOCKET = 'wss://stream.binance.com:9443/ws';
+  const request = {
+    method: 'SUBSCRIBE',
+    params: ['btcusdt@trade'],
+    id: 1,
+  };
+  const addTradeToList = (trade, newTrades) => {
+    if (newTrades.length >= 20) {
+      newTrades.shift();
+      newTrades.push(trade);
+      setTrades(newTrades);
+    } else {
+      newTrades.push(trade);
+      setTrades(newTrades);
+    }
+  };
+  //create and mount web soocket
+  useEffect(() => {
+    const wsClient = new WebSocket(URL_WEB_SOCKET);
+    wsClient.onopen = () => {
+      setWs(wsClient);
+      wsClient.send(JSON.stringify(request));
+    };
+    wsClient.onclose = () => console.log('ws closed');
+    return () => {
+      wsClient.close();
+    };
+  }, []);
 
   useEffect(() => {
-    axios.get(url).then((response) => {
-      setCoins(response.data)
-      // console.log(response.data[0])
-    }).catch((error) => {
-      console.log(error)
-    })
-  }, [])
+    if (ws) {
+      ws.onmessage = (event) => {
+        const trade = JSON.parse(event.data);
+        const newTrades = [...trades];
+        addTradeToList(trade, newTrades);
+      };
+    }
+  }, [ws, trades]);
 
   return (
     <>
       <Navbar />
       <Routes>
-        <Route path='/' element={<Coins coins={coins} />} />
-        <Route path='/coin' element={<Coin />}>
-          <Route path=':coinId' element={<Coin />} />
-        </Route>
+        <Route path='/' element={<Coins coins={trades} />} />
       </Routes>
 
     </>

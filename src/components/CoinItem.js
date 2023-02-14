@@ -1,19 +1,31 @@
 import React from 'react'
-
 import './Coins.css'
+const CoinItem = ({coins}) => {
+    function financial(x) {
+        return Number.parseFloat(x).toFixed(2);
+    }
+    const numberToDate = (numberTime) => {
+        const date = new Date(numberTime * 1000);
+        return date.toTimeString();
+    };
 
-const CoinItem = (props) => {
+    if (!coins || !coins.length || !coins[0]) return 'Loading...';
     return (
         <div className='coin-row'>
-            <p>{props.coins.market_cap_rank}</p>
-            <div className='img-symbol'>
-                <img src={props.coins.image} alt='' />
-                <p>{props.coins.symbol.toUpperCase()}</p>
-            </div>
-            <p>${props.coins.current_price.toLocaleString()}</p>
-            <p>{props.coins.price_change_percentage_24h.toFixed(2)}%</p>
-            <p className='hide-mobile'>${props.coins.total_volume.toLocaleString()}</p>
-            <p className='hide-mobile'>${props.coins.market_cap.toLocaleString()}</p>
+            {
+
+                coins.map((trade, index) => (
+                    <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{trade && trade.t}</td>
+                        <td>${trade && financial(trade.p)}</td>
+                        <td>{trade && trade.q}</td>
+                        <td>{trade && trade.b}</td>
+                        <td>{trade && trade.a}</td>
+                        <td>{trade && numberToDate(trade.T)}</td>
+                    </tr>
+                ))
+            }
         </div>
     )
 }

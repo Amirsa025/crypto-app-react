@@ -1,31 +1,50 @@
 import React from 'react'
-import CoinItem from './CoinItem'
-import Coin from '../routes/Coin'
-import { Link } from 'react-router-dom'
-
 import './Coins.css'
 
-const Coins = (props) => {
+const Coins = ({coins}) => {
+    function financial(x) {
+        return Number.parseFloat(x).toFixed(2);
+    }
+    const numberToDate = (numberTime) => {
+        const date = new Date(numberTime * 1000);
+        return date.toTimeString();
+    };
+    if (!coins || !coins.length || !coins[0]) return 'Loading...';
     return (
         <div className='container'>
             <div>
                 <div className='heading'>
-                    <p>#</p>
-                    <p className='coin-name'>Coin</p>
-                    <p>Price</p>
-                    <p>24h</p>
-                    <p className='hide-mobile'>Volume</p>
-                    <p className='hide-mobile'>Mkt Cap</p>
+                    <table>
+                        <tr>
+                            <th>STT</th>
+                            <th>Symbol</th>
+                            <th>Interval</th>
+                            <th>Trade ID</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Buyer ID</th>
+                            <th>Seller ID</th>
+                            <th>Trade time</th>
+                        </tr>
+                        {
+
+                            coins.map((trade, index) => (
+                                <tr key={index} className="trade">
+                                    <td>{index + 1}</td>
+                                    <td>{trade && trade.s}</td>
+                                    <td>{trade && trade.i}</td>
+                                    <td>{trade && trade.t}</td>
+                                    <td>${trade && financial(trade.p)}</td>
+                                    <td>{trade && trade.q}</td>
+                                    <td>{trade && trade.b}</td>
+                                    <td>{trade && trade.a}</td>
+                                    <td>{trade && numberToDate(trade.T)}</td>
+                                </tr>
+                            ))
+                        }
+                    </table>
                 </div>
 
-                {props.coins.map(coins => {
-                    return (
-                        <Link to={`/coin/${coins.id}`} element={<Coin />} key={coins.id}>
-                            <CoinItem coins={coins} />
-                        </Link>
-
-                    )
-                })}
 
             </div>
         </div>

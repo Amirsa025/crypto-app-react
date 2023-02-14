@@ -13,8 +13,11 @@
     margin: 2rem 1rem;
     padding: .7rem 1rem;
     font-weight: 700;
+    gap:20px;
 }
-
+.heading table {
+    width:100%;
+}
 .coin-name {
     margin-left: -4rem;
 }
@@ -47,7 +50,9 @@ img {
     align-items: center;
 }
 
-
+.trade{
+    padding : 0 10px ;
+}
 
 @media screen and (max-width: 720px) {
     .hide-mobile {
